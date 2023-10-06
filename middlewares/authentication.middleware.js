@@ -15,13 +15,13 @@ const authenticate = async (req, res, next) => {
           .status(440)
           .json({ message: "Session expired, Please login." });
 
-      console.error("JWT verification error:", err.message);
-
       // check for token errors
-      if (err?.name === "JsonWebTokenError")
+      if (err?.name === "JsonWebTokenError") {
+        console.error("JWT verification error:", err.message);
         return res
           .status(400)
-          .json({ message: "Something went wrong, Please try again later" });
+          .json({ message: "Something went wrong, Please login again" });
+      }
 
       // get the user info
       const { userId, email } = decoded;
