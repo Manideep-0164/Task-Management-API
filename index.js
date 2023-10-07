@@ -4,14 +4,17 @@ require("dotenv").config();
 const { connection } = require("./configs/db");
 const { userRouter } = require("./routes/user.router");
 const { taskRouter } = require("./routes/task.route");
+const { loggerMiddleware } = require("./middlewares/logger.middleware");
 const { authenticate } = require("./middlewares/authentication.middleware");
 const PORT = process.env.PORT || 1010;
 
 app.use(require("cors")());
 app.use(express.json());
 
+app.use(loggerMiddleware);
+
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Server is live!" });
+  res.json({ message: "Server is live!" });
 });
 
 app.use("/user", userRouter);

@@ -33,9 +33,7 @@ const authenticate = async (req, res, next) => {
     });
   } catch (error) {
     console.log(`Error authenticating user => ${error}`);
-    res
-      .status(500)
-      .json({ message: "Something went wrong, Please try again later" });
+    next(error);
   }
 };
 
