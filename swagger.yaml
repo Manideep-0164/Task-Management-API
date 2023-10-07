@@ -1,0 +1,519 @@
+openapi: "3.0.0"
+info:
+  version: "1.0.0"
+  title: "E-Commerce API"
+  description: "Comprehensive API documentation for the Task-Management platform."
+
+servers:
+  - url: "http://localhost:1010"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "Place your JWT token here"
+
+paths:
+  /user/register:
+    post:
+      summary: "Register a new user."
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                  description: "User's name."
+                email:
+                  type: "string"
+                  format: "email"
+                  description: "User's email address."
+                password:
+                  type: "string"
+                  description: "User's password."
+              example:
+                name: "John Doe"
+                email: "john.doe@example.com"
+                password: "password123"
+      responses:
+        201:
+          description: "User successfully registered."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Success message."
+                    example: "Successfully Registered."
+        409:
+          description: "User already exists. Please login."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "User already exists. Please login."
+        500:
+          description: "Internal server error."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+                    description: "Error message."
+                    example: "Something went wrong. Please try again later."
+
+  /user/login:
+    post:
+      summary: "Login a user"
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                email:
+                  type: "string"
+                  description: "User's email address."
+                password:
+                  type: "string"
+                  description: "User's password."
+              example:
+                email: "john.doe@example.com"
+                password: "password123"
+      responses:
+        200:
+          description: "Login successful"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Success message."
+                    example: "Login success."
+                  token:
+                    type: "string"
+                    description: "Generated JWT token for authentication."
+                    example: "eyJhbGciOiJIUzI1NiIsIn..."
+        401:
+          description: "Invalid credentials"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Invalid credentials, Please try again."
+        404:
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "User does not exist, Please register."
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Something went wrong. Please try again later."
+
+  /tasks:
+    post:
+      summary: "Add a new task"
+      tags:
+        - "Task"
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                  description: "Title of the task."
+                description:
+                  type: "string"
+                  description: "Description of the task."
+              example:
+                title: "Task Title"
+                description: "Task Description"
+      responses:
+        201:
+          description: "Task added successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Success message."
+                    example: "Task added successfully."
+                  task:
+                    type: "object"
+                    properties:
+                      _id:
+                        type: "string"
+                        description: "Unique identifier for the task."
+                      title:
+                        type: "string"
+                        description: "Title of the task."
+                      description:
+                        type: "string"
+                        description: "Description of the task."
+                      user:
+                        type: "string"
+                        description: "Email of the user to whom the task belongs."
+                    example:
+                      _id: "609b9e6c77a3c71b4c94d8e5"
+                      title: "Task Title"
+                      description: "Task Description"
+                      user: "john.doe@example.com"
+        400:
+          description: "Bad request - Title and description are required"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Title and description are required."
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Something went wrong. Please try again later."
+
+    get:
+      summary: "Get tasks for a user"
+      tags:
+        - "Task"
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Tasks retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    _id:
+                      type: "string"
+                      description: "Unique identifier for the task."
+                    title:
+                      type: "string"
+                      description: "Title of the task."
+                    description:
+                      type: "string"
+                      description: "Description of the task."
+                    user:
+                      type: "string"
+                      description: "Email of the user to whom the task belongs."
+                  example:
+                    - _id: "609b9e6c77a3c71b4c94d8e5"
+                      title: "Task Title 1"
+                      description: "Task Description 1"
+                      user: "john.doe@example.com"
+                    - _id: "609b9e6c77a3c71b4c94d8e6"
+                      title: "Task Title 2"
+                      description: "Task Description 2"
+                      user: "john.doe@example.com"
+        204:
+          description: "No tasks found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Informational message."
+                    example: "No tasks found."
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Something went wrong. Please try again later."
+
+  /tasks/{id}:
+    get:
+      summary: "Get a single task by ID"
+      tags:
+        - "Task"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the task to retrieve"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Task retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  task:
+                    type: "object"
+                    properties:
+                      _id:
+                        type: "string"
+                        description: "Unique identifier for the task."
+                      title:
+                        type: "string"
+                        description: "Title of the task."
+                      description:
+                        type: "string"
+                        description: "Description of the task."
+                      user:
+                        type: "string"
+                        description: "Email of the user to whom the task belongs."
+                    example:
+                      _id: "609b9e6c77a3c71b4c94d8e5"
+                      title: "Task Title"
+                      description: "Task Description"
+                      user: "john.doe@example.com"
+        400:
+          description: "Bad request - Invalid ID format"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Invalid id format"
+        404:
+          description: "Task not found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Task not found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Something went wrong. Please try again later."
+
+    put:
+      summary: "Update a task by ID"
+      tags:
+        - "Task"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the task to update"
+          required: true
+          type: "string"
+      requestBody:
+        description: "Task update details"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                  description: "Title of the task."
+                description:
+                  type: "string"
+                  description: "Description of the task."
+                status:
+                  type: "string"
+                  description: "Status of the task."
+              example:
+                title: "Updated Task Title"
+                description: "Updated Task Description"
+                status: "completed"
+      responses:
+        200:
+          description: "Task updated successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Success message."
+                    example: "Successfully updated task."
+                  task:
+                    type: "object"
+                    properties:
+                      _id:
+                        type: "string"
+                        description: "Unique identifier for the task."
+                      title:
+                        type: "string"
+                        description: "Updated title of the task."
+                      description:
+                        type: "string"
+                        description: "Updated description of the task."
+                      status:
+                        type: "string"
+                        description: "Updated status of the task."
+                    example:
+                      _id: "609b9e6c77a3c71b4c94d8e5"
+                      title: "Updated Task Title"
+                      description: "Updated Task Description"
+                      status: "completed"
+        400:
+          description: "Bad request - Provide at least one field to update"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Provide at least one of these fields: title, description, or status to update"
+        404:
+          description: "Task not found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Task not found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Something went wrong. Please try again later."
+
+    delete:
+      summary: "Delete a task by ID"
+      tags:
+        - "Task"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the task to delete"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Task deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Success message."
+                    example: "Task deleted."
+        400:
+          description: "Bad request - Invalid ID format"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Invalid id format"
+        404:
+          description: "Task not found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Task not found"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    description: "Error message."
+                    example: "Something went wrong. Please try again later."
