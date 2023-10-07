@@ -9,7 +9,7 @@ const { authenticate } = require("./middlewares/authentication.middleware");
 const { rateLimiter } = require("./middlewares/ratelimiter.middleware");
 const swaggerUi = require("swagger-ui-express");
 const specs = require("./swagger");
-const PORT = process.env.PORT || 1010;
+const PORT = process.env.PORT || 5000;
 
 app.use(require("cors")());
 app.use(express.json());

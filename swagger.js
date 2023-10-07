@@ -11,8 +11,12 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:1010",
+        url: "http://localhost:5000",
         description: "Local server",
+      },
+      {
+        url: "https://puzzled-flip-flops-wasp.cyclic.app",
+        description: "Deployed server",
       },
     ],
   },

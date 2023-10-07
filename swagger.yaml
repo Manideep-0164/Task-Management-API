@@ -5,7 +5,7 @@ info:
   description: "Comprehensive API documentation for the Task-Management platform."
 
 servers:
-  - url: "http://localhost:1010"
+  - url: "http://localhost:5000"
 
 components:
   securitySchemes:
