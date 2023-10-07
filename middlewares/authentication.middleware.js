@@ -12,10 +12,10 @@ const authenticate = async (req, res, next) => {
       // check whether token expired
       if (err?.name === "TokenExpiredError")
         return res
-          .status(440)
+          .status(401)
           .json({ message: "Session expired, Please login." });
 
-      // check for token errors
+      // check for other token errors
       if (err?.name === "JsonWebTokenError") {
         console.error("JWT verification error:", err.message);
         return res
