@@ -3,7 +3,7 @@ const app = express();
 require("dotenv").config();
 const { connection } = require("./configs/db");
 const { userRouter } = require("./routes/user.router");
-const { taskRouter } = require("./routes/task.route");
+const { taskRouter } = require("./routes/task.router");
 const { loggerMiddleware } = require("./middlewares/logger.middleware");
 const { authenticate } = require("./middlewares/authentication.middleware");
 const { rateLimiter } = require("./middlewares/ratelimiter.middleware");

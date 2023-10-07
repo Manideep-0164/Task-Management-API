@@ -29,10 +29,12 @@ const authenticate = async (req, res, next) => {
       req.userId = userId;
       req.email = email;
 
+      // Continue to the next middleware in the chain
       next();
     });
   } catch (error) {
     console.log(`Error authenticating user => ${error}`);
+    // Pass the error to the next error handling middleware
     next(error);
   }
 };
